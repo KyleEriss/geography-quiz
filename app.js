@@ -1,58 +1,128 @@
-/**
- * Example store structure
- */
 const store = {
-  // 5 or more questions are required
   questions: [
-    {
-      question: 'What color is broccoli?',
+    { // Question 1
+      question: 'Which National Park is this?',
       answers: [
-        'red',
-        'orange',
-        'pink',
-        'green'
+        'Kings Canyon',
+        'Zion',
+        'Coral Sea',
+        'Canyonlands',
+        'Arches'
       ],
-      correctAnswer: 'green'
+      correctAnswer: 'Zion'
     },
-    {
-      question: 'What is the current year?',
+    { // Question 2
+      question: 'Which National Park is this?',
       answers: [
-        '1970',
-        '2015',
-        '2019',
-        '2005'
+        'Joshua Tree',
+        'Petrfied Forest',
+        'Bryce Canyon',
+        'Big Bend'
       ],
-      correctAnswer: '2019'
+      correctAnswer: 'Big Bend'
+    },
+    { // Question 3
+      question: 'Which National Park is this?',
+      answers: [
+        'Grand Canyon',
+        'Kings Canyon',
+        'Great Basin',
+        'Black Canyon of the Gunnison'
+      ],
+      correctAnswer: 'Grand Canyon'
+    },
+    { // Question 4
+      question: 'Which National Park is this?',
+      answers: [
+        'Dry Tortugas',
+        'Congaree',
+        'Mesa Verde',
+        'Saguaro'
+      ],
+      correctAnswer: 'Mesa Verde'
+    },
+    { // Question 5
+      question: 'Which National Park is this?',
+      answers: [
+        'Yellowstone',
+        'Yosemite',
+        'Grand Teton',
+        'Rocky Mountain'
+      ],
+      correctAnswer: 'Yosemite'
     }
   ],
   quizStarted: false,
   questionNumber: 0,
-  score: 0
+  submittingAnswer: false,
+  score: 0,
+
+  currentQuestionState: {
+    answerArray: []
+  }
 };
 
-/**
- * 
- * Technical requirements:
- * 
- * Your app should include a render() function, that regenerates the view each time the store is updated. 
- * See your course material and access support for more details.
- *
- * NO additional HTML elements should be added to the index.html file.
- *
- * You may add attributes (classes, ids, etc) to the existing HTML elements, or link stylesheets or additional scripts if necessary
- *
- * SEE BELOW FOR THE CATEGORIES OF THE TYPES OF FUNCTIONS YOU WILL BE CREATING 👇
- * 
- */
+function welcomePage() {
+  return `
+    <form>
+      <button type="submit"id="getStarted" autofocus>Get Started</button>
+    </form>
+    `;
+}
 
-/********** TEMPLATE GENERATION FUNCTIONS **********/
+function quizQuestions(questionObject) {
+  return `
+  <div class="quiz-interface">
+    <p>Question ${questionObject.index} out of ${store.questions.length}</p>
+    <p>${questionObject.question.question}</p>
+    <form>
+      <ol type="A">
+        ${generateAnswersList(questionObject.question.answers)}
+      </ol>
+      <button type="submit" class="submitAnswer">Submit Answer</button>
+    </form> 
+    <p>Score: ${store.score}</p>
+  </div>
+  `
+}
 
-// These functions return HTML templates
+function generateAnswersList () {
+  
+}
 
-/********** RENDER FUNCTION(S) **********/
+function renderQuiz() {
+  const welcomePageString = welcomePage();
+  if (store.quizStarted === false) {
+    $("main").html(welcomePageString);
+  }
+  else {
+    const quizQuestionString = quizQuestions(currentQuestion());
+    $('main').html(quizQuestionString);
+  }
+}
 
-// This function conditionally replaces the contents of the <main> tag based on the state of the store
+function startQuiz() {
+  console.log('quiz has begun');
+  store.quizStarted = true;
+}
 
-/********** EVENT HANDLER FUNCTIONS **********/
+function handleStartQuiz() {
+  $("main").on("click", "#submitAnswer", (event) =>{
+    event.preventDefault();
+    startQuiz();
+    renderQuiz();
+  });
+}
 
-// These functions handle events (submit, click, etc)
+  // This function will launch all other functions after the page is loaded
+  function handleQuiz (){
+    renderQuiz();
+    handleStartQuiz();
+    handleSubmitAnswer();
+    handleNextQuestionSubmit();
+    handleRestartQuizSubmit();
+    handleSeeResultsSubmit();
+  
+  }
+  
+  $(handleQuiz);

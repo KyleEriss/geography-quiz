@@ -1,8 +1,23 @@
-/* Your styles should be mobile-first and responsive */
+body {
+  background-color: grey;
+  text-align: center;
+  font-family: 'Nanum Pen Script', cursive;
+  font-size: 54px;
+  font-weight: 500;
+  letter-spacing: 1px;
+}
 
-/** 
-  * If you are unclear on how to utilize a mobile-first, responsive technique to write your CSS, here is an example: 
-  *
-  * https://github.com/andreacardybailey/responsive_example/blob/master/styles/responsive-base.css 
-  *
-*/
+button {
+  border-radius: 10px;
+  background: rgb(107, 107, 107);
+  font-weight: 900;
+  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+}
+
+.quiz-interface {
+  margin: 20px;
+  padding: 26px;
+  border: 15px solid;
+  display: flex;
+  flex-direction: column;
+}
