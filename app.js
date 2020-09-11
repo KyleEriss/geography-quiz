@@ -2,10 +2,11 @@ const store = {
   questions: [
     { // Question 1
       question: 'Which National Park is this?',
+      image: "zion.jpg",
       answers: [
         'Kings Canyon',
         'Zion',
-        'Coral Sea',
+        'Bryce Canyon',
         'Canyonlands',
         'Arches'
       ],
@@ -13,6 +14,7 @@ const store = {
     },
     { // Question 2
       question: 'Which National Park is this?',
+      image: "bigbend.jpg",
       answers: [
         'Joshua Tree',
         'Petrfied Forest',
@@ -23,6 +25,7 @@ const store = {
     },
     { // Question 3
       question: 'Which National Park is this?',
+      image: "grandcanyon.jpg",
       answers: [
         'Grand Canyon',
         'Kings Canyon',
@@ -33,6 +36,7 @@ const store = {
     },
     { // Question 4
       question: 'Which National Park is this?',
+      image: "mesaverde.jpg",
       answers: [
         'Dry Tortugas',
         'Congaree',
@@ -43,6 +47,7 @@ const store = {
     },
     { // Question 5
       question: 'Which National Park is this?',
+      image: "yosemite.jpg",
       answers: [
         'Yellowstone',
         'Yosemite',
@@ -53,76 +58,117 @@ const store = {
     }
   ],
   quizStarted: false,
+  submitAnswer: false,
   questionNumber: 0,
-  submittingAnswer: false,
   score: 0,
-
-  currentQuestionState: {
-    answerArray: []
-  }
 };
 
 function welcomePage() {
   return `
-    <form>
-      <button type="submit"id="getStarted" autofocus>Get Started</button>
-    </form>
-    `;
+    <button type="submit"id="getStarted">Get started</button>
+  `;
 }
 
-function quizQuestions(questionObject) {
+function renderWelcome() {
+  const welcome = welcomePage();
+  $("main").html(welcome);
+}
+
+function answersArray() {
+  let i = store.questionNumber;
+  let list = store.questions[i].answers;
+  return list;
+}
+
+function submitAnswerButton() {
   return `
-  <div class="quiz-interface">
-    <p>Question ${questionObject.index} out of ${store.questions.length}</p>
-    <p>${questionObject.question.question}</p>
-    <form>
-      <ol type="A">
-        ${generateAnswersList(questionObject.question.answers)}
-      </ol>
-      <button type="submit" class="submitAnswer">Submit Answer</button>
-    </form> 
-    <p>Score: ${store.score}</p>
-  </div>
-  `
+    <button type="submit"id="submitAnswer">Submit Answer</button>
+  `;
 }
 
-function generateAnswersList () {
-  
+function renderImage() {
+  let i = store.questionNumber;
+  let picture = store.questions[i].image;
+  return `
+    <img src="images/${picture}" class="image"/>
+  `;
+}
+
+function generateQuestion() {
+  let ulList = generateLiTags();
+  return `
+    <div class="group">
+      <div class="item">
+        ${renderImage()}
+      </div>
+      <div class="item">
+        <form class="answerForm">
+          <ul>
+            ${ulList}
+            <li>${submitAnswerButton()}</li>
+          </ul>
+        </form>
+      </div>
+    </div>
+  `;
+}
+
+function renderQuestion() {
+  const list = generateQuestion();
+  $("main").html(list);
+}
+
+function generateLiTags() {
+  let answersArrayList = answersArray()
+  let liList = [];
+  for (let n = 0; n < answersArrayList.length; n++) {
+    console.log(answersArrayList[n]);
+    liList += `<li> <input type="radio" name="multipleChoice" id="answer-${n}" /><label for="answer-${n}">${answersArrayList[n]}</label></li>`
+    }
+  return liList;
 }
 
 function renderQuiz() {
-  const welcomePageString = welcomePage();
-  if (store.quizStarted === false) {
-    $("main").html(welcomePageString);
+  if(store.quizStarted === false) {
+    renderWelcome();
   }
-  else {
-    const quizQuestionString = quizQuestions(currentQuestion());
-    $('main').html(quizQuestionString);
+  if(store.quizStarted === true) {
+    if (store.submitAnswer === false) {
+      renderQuestion();
+    }
   }
+}
+
+function nextQuestion() {
+  store.submitAnswer = true;
 }
 
 function startQuiz() {
-  console.log('quiz has begun');
   store.quizStarted = true;
 }
-
+ 
 function handleStartQuiz() {
-  $("main").on("click", "#submitAnswer", (event) =>{
+  $("main").on("click", "#getStarted", (event) => {
     event.preventDefault();
     startQuiz();
     renderQuiz();
   });
 }
 
-  // This function will launch all other functions after the page is loaded
-  function handleQuiz (){
-    renderQuiz();
-    handleStartQuiz();
-    handleSubmitAnswer();
-    handleNextQuestionSubmit();
-    handleRestartQuizSubmit();
-    handleSeeResultsSubmit();
-  
-  }
-  
-  $(handleQuiz);
+function handleNextQuestion() {
+  $("main").on("click", "#submitAnswer", (event) => {
+    event.preventDefault();
+    //check if answer is right or wrong
+    //compute score
+    store.questionNumber += 1;
+    renderQuestion();
+  });
+}
+
+function handleQuiz() {
+  renderQuiz();
+  handleStartQuiz();
+  handleNextQuestion();
+}
+
+$(handleQuiz);

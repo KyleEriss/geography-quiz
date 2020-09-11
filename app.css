@@ -2,9 +2,9 @@ body {
   background-color: grey;
   text-align: center;
   font-family: 'Nanum Pen Script', cursive;
-  font-size: 54px;
+  font-size: 37px;
   font-weight: 500;
-  letter-spacing: 1px;
+  letter-spacing: 0;
 }
 
 button {
@@ -14,10 +14,69 @@ button {
   box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
 }
 
-.quiz-interface {
-  margin: 20px;
-  padding: 26px;
-  border: 15px solid;
+ul {
+  text-align: center;
+  margin: 0;
+  padding-left: 10px;
+  list-style: none;
+  text-align: left;
+}
+
+form {
+  justify-content: center;
+}
+
+.group {
   display: flex;
   flex-direction: column;
 }
+
+.item {
+  flex: 1;
+  margin: 10px;
+}
+
+#submitAnswer {
+  margin-top: 35px;
+}
+
+
+.image {
+  width: 70%;
+}
+
+@media all and (min-width: 350px) {
+  body {
+    font-size: 47px;
+    letter-spacing: 1px;
+  }
+}
+
+@media all and (min-width: 800px) {
+
+  .image {
+    width: 70%;
+  }
+
+  ul {
+    text-align: left;
+  }
+
+  header {
+    text-align: center;
+  }
+  body {
+    text-align: center;
+  }
+
+  .group {
+    display: flex;
+    flex-direction: row;
+  }
+
+  .item {
+    flex: 2;
+    margin: 10px;
+  }
+}
+
