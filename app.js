@@ -19,7 +19,8 @@ const store = {
         'Joshua Tree',
         'Petrfied Forest',
         'Bryce Canyon',
-        'Big Bend'
+        'Big Bend',
+        'Canyonlands'
       ],
       correctAnswer: 'Big Bend'
     },
@@ -29,6 +30,7 @@ const store = {
       answers: [
         'Grand Canyon',
         'Kings Canyon',
+        'Acadia',
         'Great Basin',
         'Black Canyon of the Gunnison'
       ],
@@ -40,6 +42,7 @@ const store = {
       answers: [
         'Dry Tortugas',
         'Congaree',
+        'Joshua Tree',
         'Mesa Verde',
         'Saguaro'
       ],
@@ -49,6 +52,7 @@ const store = {
       question: 'Which National Park is this?',
       image: "yosemite.jpg",
       answers: [
+        'Grand Teton',
         'Yellowstone',
         'Yosemite',
         'Grand Teton',
@@ -102,7 +106,7 @@ function generateQuestion() {
         ${renderImage()}
       </div>
       <div class="item">
-        <form class="answerForm">
+        <form name="answerForm">
           <ul>
             ${ulList}
             <li>${submitAnswerButton()}</li>
@@ -123,7 +127,7 @@ function generateLiTags() {
   let liList = [];
   for (let n = 0; n < answersArrayList.length; n++) {
     console.log(answersArrayList[n]);
-    liList += `<li> <input type="radio" name="multipleChoice" id="answer-${n}" /><label for="answer-${n}">${answersArrayList[n]}</label></li>`
+    liList += `<li> <input type="radio" name="mltlpChoice" id="answer-${n}" value="${answersArrayList[n]}"/><label for="answer-${n}">${answersArrayList[n]}</label></li>`
     }
   return liList;
 }
@@ -155,20 +159,58 @@ function handleStartQuiz() {
   });
 }
 
-function handleNextQuestion() {
+function verifyAnswer() {
+  let radios = $('input:radio[name=mltlpChoice]');
+  let answersArrayList = answersArray();
+  for (let i = 0; i < radios.length; i++) {
+    if (radios[i].checked) {
+      return answersArrayList[i];
+    }
+  }
+}
+
+function nextQuestionButton() {
+  return `
+    <button type="submit"id="nextQuestion">Next Question</button>
+  `;
+}
+
+function generateVerifyAnswer() {
+  let radios = $('input:not(:checked)');
+  for (let i = 0; i < radios.length; i++) {
+    if (radios.length === 5) {
+      alert('Please select an answer.');
+      return;
+    }
+  }
+  
+  let answerVerify = verifyAnswer();
+  let i = store.questionNumber;
+  let answerCorrect = store.questions[i].correctAnswer;
+  let correct = "That's correct!";
+  let incorrect = "Sorry, that's incorrect";
+  if (answerVerify === answerCorrect) {
+    return $("main").html(correct);
+  }
+  return $("main").html(incorrect);
+}
+
+
+
+
+
+function handleSubmitAnswer() {
   $("main").on("click", "#submitAnswer", (event) => {
     event.preventDefault();
-    //check if answer is right or wrong
-    //compute score
-    store.questionNumber += 1;
-    renderQuestion();
+    generateVerifyAnswer();
   });
 }
+
 
 function handleQuiz() {
   renderQuiz();
   handleStartQuiz();
-  handleNextQuestion();
+  handleSubmitAnswer();
 }
 
 $(handleQuiz);
