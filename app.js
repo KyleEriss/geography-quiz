@@ -65,6 +65,7 @@ const store = {
   submitAnswer: false,
   questionNumber: 0,
   score: 0,
+  answerChecked: false,
 };
 
 function welcomePage() {
@@ -175,6 +176,12 @@ function nextQuestionButton() {
   `;
 }
 
+
+function generateNextQuestionButton() {
+  let nextQuestion = nextQuestionButton();
+  return $("main").html(nextQuestion);
+}
+
 function generateVerifyAnswer() {
   let radios = $('input:not(:checked)');
   for (let i = 0; i < radios.length; i++) {
@@ -183,20 +190,39 @@ function generateVerifyAnswer() {
       return;
     }
   }
-  
   let answerVerify = verifyAnswer();
   let i = store.questionNumber;
   let answerCorrect = store.questions[i].correctAnswer;
-  let correct = "That's correct!";
-  let incorrect = "Sorry, that's incorrect";
+  let correct = `That's correct!`;
+  let incorrect = `Sorry, that's incorrect`;
   if (answerVerify === answerCorrect) {
     return $("main").html(correct);
   }
   return $("main").html(incorrect);
 }
 
+function renderNextQuestion() {
+  let userAnswer = verifyAnswer();
+  return `
+    <div class="group">
+      <div class="item">
+        <form name="resultsForm">
+          <ul>
+          <li>${userAnswer}</li>
+          <li>${generateNextQuestionButton()}</li>
+          </ul>
+        </form>
+      </div>
+    </div>    
+  `;
+}
 
-
+function answerChecked() {
+  if (store.answerChecked = true) {
+    renderNextQuestion();
+  }
+  
+}
 
 
 function handleSubmitAnswer() {
