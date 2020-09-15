@@ -65,7 +65,6 @@ const store = {
   submitAnswer: false,
   questionNumber: 0,
   score: 0,
-  answerChecked: false,
 };
 
 function welcomePage() {
@@ -138,26 +137,12 @@ function renderQuiz() {
     renderWelcome();
   }
   if(store.quizStarted === true) {
-    if (store.submitAnswer === false) {
-      renderQuestion();
-    }
+    renderQuestion();
   }
-}
-
-function nextQuestion() {
-  store.submitAnswer = true;
 }
 
 function startQuiz() {
   store.quizStarted = true;
-}
- 
-function handleStartQuiz() {
-  $("main").on("click", "#getStarted", (event) => {
-    event.preventDefault();
-    startQuiz();
-    renderQuiz();
-  });
 }
 
 function verifyAnswer() {
@@ -170,19 +155,24 @@ function verifyAnswer() {
   }
 }
 
-function nextQuestionButton() {
+
+
+function nextQuestionButton(answerText) {
+  let totalQuestions = store.questions.length;
+  let questionNumber = store.questionNumber;
+  if (questionNumber === totalQuestions) {
+    return `
+      ${answerText}<p/>
+      <button type="submit"id="finalResults">Final Results</button>
+    `;
+  }
   return `
+    ${answerText}<p/>
     <button type="submit"id="nextQuestion">Next Question</button>
   `;
 }
 
-
-function generateNextQuestionButton() {
-  let nextQuestion = nextQuestionButton();
-  return $("main").html(nextQuestion);
-}
-
-function generateVerifyAnswer() {
+function renderAnswer() {
   let radios = $('input:not(:checked)');
   for (let i = 0; i < radios.length; i++) {
     if (radios.length === 5) {
@@ -193,50 +183,50 @@ function generateVerifyAnswer() {
   let answerVerify = verifyAnswer();
   let i = store.questionNumber;
   let answerCorrect = store.questions[i].correctAnswer;
-  let correct = `That's correct!`;
-  let incorrect = `Sorry, that's incorrect`;
+  let answerText = "Sorry, that's incorrect";
+  store.questionNumber += 1;
   if (answerVerify === answerCorrect) {
-    return $("main").html(correct);
+    store.score += 1;
+    answerText = "That's correct!";
   }
-  return $("main").html(incorrect);
+  let response = nextQuestionButton(answerText);
+  return $("main").html(response);
 }
 
-function renderNextQuestion() {
-  let userAnswer = verifyAnswer();
-  return `
-    <div class="group">
-      <div class="item">
-        <form name="resultsForm">
-          <ul>
-          <li>${userAnswer}</li>
-          <li>${generateNextQuestionButton()}</li>
-          </ul>
-        </form>
-      </div>
-    </div>    
-  `;
+function handleStartQuiz() {
+  $("main").on("click", "#getStarted", (event) => {
+    event.preventDefault();
+    startQuiz();
+    renderQuiz();
+  });
 }
-
-function answerChecked() {
-  if (store.answerChecked = true) {
-    renderNextQuestion();
-  }
-  
-}
-
 
 function handleSubmitAnswer() {
   $("main").on("click", "#submitAnswer", (event) => {
     event.preventDefault();
-    generateVerifyAnswer();
+    renderAnswer();
   });
 }
 
+function handleNextQuestion() {
+  $("main").on("click", "#nextQuestion", (event) => {
+    event.preventDefault();
+    return renderQuiz();
+  })
+}
+
+
+function renderEndQuiz() {
+  return `
+  <button type="submit"id="finalResults">Final Results</button>
+  `;
+}
 
 function handleQuiz() {
   renderQuiz();
   handleStartQuiz();
   handleSubmitAnswer();
+  handleNextQuestion();
 }
 
 $(handleQuiz);
