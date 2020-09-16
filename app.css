@@ -14,6 +14,17 @@ button {
   box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
 }
 
+.addQuestions {
+  font-weight: 900;
+  list-style: none;
+  text-align: left;
+  margin-bottom: 27px;
+}
+
+.emphasis {
+  font-weight: 900;
+}
+
 ul {
   text-align: center;
   margin: 0;
@@ -55,7 +66,7 @@ form {
 @media all and (min-width: 800px) {
 
   .image {
-    width: 70%;
+    width: 90%;
   }
 
   ul {
@@ -80,3 +91,8 @@ form {
   }
 }
 
+@media all and (min-width: 900px) {
+  .image {
+    width: 70%
+  }
+}

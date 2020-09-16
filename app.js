@@ -55,7 +55,7 @@ const store = {
         'Grand Teton',
         'Yellowstone',
         'Yosemite',
-        'Grand Teton',
+        'Glacier',
         'Rocky Mountain'
       ],
       correctAnswer: 'Yosemite'
@@ -66,6 +66,18 @@ const store = {
   questionNumber: 0,
   score: 0,
 };
+
+function generateHeader() {
+  return `
+    <header>
+      <h1>National Parks Quiz</h1>
+    </header>
+  `
+}
+
+function renderHeader() {
+  $("header").html(generateHeader());
+}
 
 function welcomePage() {
   return `
@@ -98,6 +110,14 @@ function renderImage() {
   `;
 }
 
+function addQuestions() {
+  let i = store.questionNumber;
+  let questions = store.questions[i].question;
+  return `
+    <li>${questions}</li>
+  `;
+}
+
 function generateQuestion() {
   let ulList = generateLiTags();
   return `
@@ -106,8 +126,12 @@ function generateQuestion() {
         ${renderImage()}
       </div>
       <div class="item">
+        <div class="addQuestions">
+          ${addQuestions()}
+        </div>
         <form name="answerForm">
           <ul>
+            
             ${ulList}
             <li>${submitAnswerButton()}</li>
           </ul>
@@ -155,19 +179,21 @@ function verifyAnswer() {
   }
 }
 
-
-
-function nextQuestionButton(answerText) {
+function nextQuestionButton(answerText, answerVerify, answerCorrect) {
   let totalQuestions = store.questions.length;
   let questionNumber = store.questionNumber;
   if (questionNumber === totalQuestions) {
     return `
       ${answerText}<p/>
+      <p>You selected: <div class="emphasis">${answerVerify}</div></p>
+      <p>The correct answer is: <div class="emphasis">${answerCorrect}</div></p>
       <button type="submit"id="finalResults">Final Results</button>
     `;
   }
   return `
     ${answerText}<p/>
+    <p>You selected: <div class="emphasis">${answerVerify}</div></p>
+    <p>The correct answer is: <div class="emphasis">${answerCorrect}</div></p>
     <button type="submit"id="nextQuestion">Next Question</button>
   `;
 }
@@ -189,14 +215,14 @@ function renderAnswer() {
     store.score += 1;
     answerText = "That's correct!";
   }
-  let response = nextQuestionButton(answerText);
+  let response = nextQuestionButton(answerText, answerVerify, answerCorrect);
   return $("main").html(response);
 }
 
 function newQuizButton(finalScore, total) {
   return `
     <p>You answered ${finalScore} out of ${total} questions correct</p>
-    <button type="submit"id="startNewQuiz">Start a new quiz</button>
+    <button type="submit"id="newQuiz">Start a new quiz</button>
   `;
 }
 
@@ -236,12 +262,25 @@ function handleFinalResults() {
   });
 }
 
+function handleNewQuiz() {
+  $("main").on("click", "#newQuiz", (event) => {
+    event.preventDefault();
+    store.quizStarted = false;
+    store.submitAnswer = false;
+    store.questionNumber = 0;
+    store.score = 0;
+    renderWelcome();
+  });
+}
+
 function handleQuiz() {
+  renderHeader();
   renderQuiz();
   handleStartQuiz();
   handleSubmitAnswer();
   handleNextQuestion();
   handleFinalResults();
+  handleNewQuiz();
 }
 
 $(handleQuiz);
