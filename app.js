@@ -193,6 +193,20 @@ function renderAnswer() {
   return $("main").html(response);
 }
 
+function newQuizButton(finalScore, total) {
+  return `
+    <p>You answered ${finalScore} out of ${total} questions correct</p>
+    <button type="submit"id="startNewQuiz">Start a new quiz</button>
+  `;
+}
+
+function renderFinalResultsPage() {
+  let finalScore = store.score;
+  let total = store.questionNumber;
+  let response = newQuizButton(finalScore, total);
+  return $("main").html(response);
+}
+
 function handleStartQuiz() {
   $("main").on("click", "#getStarted", (event) => {
     event.preventDefault();
@@ -215,11 +229,11 @@ function handleNextQuestion() {
   })
 }
 
-
-function renderEndQuiz() {
-  return `
-  <button type="submit"id="finalResults">Final Results</button>
-  `;
+function handleFinalResults() {
+  $("main").on("click", "#finalResults", (event) => {
+    event.preventDefault();
+    renderFinalResultsPage();
+  });
 }
 
 function handleQuiz() {
@@ -227,6 +241,7 @@ function handleQuiz() {
   handleStartQuiz();
   handleSubmitAnswer();
   handleNextQuestion();
+  handleFinalResults();
 }
 
 $(handleQuiz);
