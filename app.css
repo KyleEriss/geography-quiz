@@ -7,6 +7,10 @@ body {
   letter-spacing: 0;
 }
 
+header {
+  margin: 10px;
+}
+
 button {
   border-radius: 10px;
   background: rgb(107, 107, 107);
@@ -18,11 +22,7 @@ button {
   font-weight: 900;
   list-style: none;
   text-align: left;
-  margin-bottom: 27px;
-}
-
-.emphasis {
-  font-weight: 900;
+  margin-bottom: 15px;
 }
 
 ul {
@@ -47,10 +47,25 @@ form {
   margin: 10px;
 }
 
-#submitAnswer {
-  margin-top: 35px;
+.questionAndScore {
+  display: flex;
+  flex-direction: column;
+  list-style: none;
+  text-align: left;
+  justify-content: left;
+  margin-top: 100px;
 }
 
+.questionScoreItems {
+  flex: 1;
+  font-weight: 600;
+  font-size: 30px;
+  margin: 0;
+}
+
+#submitAnswer {
+  margin-top: 18px;
+}
 
 .image {
   width: 70%;
@@ -58,12 +73,16 @@ form {
 
 @media all and (min-width: 350px) {
   body {
-    font-size: 47px;
-    letter-spacing: 1px;
+    font-size: 40px;
+    letter-spacing: 0;
   }
 }
 
 @media all and (min-width: 800px) {
+  body {
+    font-size: 33px;
+    letter-spacing: 0;
+  }
 
   .image {
     width: 90%;
@@ -89,10 +108,55 @@ form {
     flex: 2;
     margin: 10px;
   }
+
+  .questionAndScore {
+    display: flex;
+    flex-direction: column;
+    list-style: none;
+    text-align: center;
+    justify-content: center;
+    margin-top: 100px;
+  }
+  
+  .questionScoreItems {
+    flex: 1;
+    font-weight: 600;
+    font-size: 30px;
+    margin: 0;
+  }
 }
 
 @media all and (min-width: 900px) {
   .image {
+    width: 85%
+  }
+}
+
+@media all and (min-width: 1300px) {
+  .image {
     width: 70%
+  }
+}
+
+@media all and (min-width: 1500px) {
+  body {
+    font-size: 40px;
+    letter-spacing: 0;
+  }
+
+  .questionScoreItems {
+    font-size: 35px;
+  }
+}
+
+
+@media all and (min-width: 1700px) {
+  body {
+    font-size: 45px;
+    letter-spacing: 0;
+  }
+
+  .questionScoreItems {
+    font-size: 40px;
   }
 }

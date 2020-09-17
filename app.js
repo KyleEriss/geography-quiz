@@ -67,12 +67,27 @@ const store = {
   score: 0,
 };
 
+function currentScore() {
+  let questionNumber = store.questionNumber;
+  let correctScore = store.score;
+  let incorrectScore = (questionNumber - correctScore);
+  return `
+    <p>Score: ${correctScore} correct, ${incorrectScore} incorrect</p>
+  `;
+}
+
+function currentQuestion() {
+  let questionNumber = store.questionNumber + 1;
+  let total = store.questions.length;
+  return `
+    <p>Question ${questionNumber} out of ${total}</p>
+  `
+}
+
 function generateHeader() {
   return `
-    <header>
-      <h1>National Parks Quiz</h1>
-    </header>
-  `
+    <h1>National Parks Quiz</h1>
+  `;
 }
 
 function renderHeader() {
@@ -126,18 +141,22 @@ function generateQuestion() {
         ${renderImage()}
       </div>
       <div class="item">
-        <div class="addQuestions">
-          ${addQuestions()}
-        </div>
         <form name="answerForm">
-          <ul>
-            
+          <div class="addQuestions">
+            ${addQuestions()}
+          </div>
+          <ul>  
             ${ulList}
             <li>${submitAnswerButton()}</li>
           </ul>
         </form>
+        
       </div>
     </div>
+    <ul class="questionAndScore">
+      <li class="questionScoreItems">${currentQuestion()}</li>
+      <li class="questionScoreItems">${currentScore()}</li>
+    </ul>
   `;
 }
 
@@ -185,15 +204,17 @@ function nextQuestionButton(answerText, answerVerify, answerCorrect) {
   if (questionNumber === totalQuestions) {
     return `
       ${answerText}<p/>
-      <p>You selected: <div class="emphasis">${answerVerify}</div></p>
-      <p>The correct answer is: <div class="emphasis">${answerCorrect}</div></p>
+      You selected: <strong>${answerVerify}</strong><p/>
+      The correct answer is: <strong>${answerCorrect}</strong><p/>
+      ${currentScore()}<p/>
       <button type="submit"id="finalResults">Final Results</button>
     `;
   }
   return `
     ${answerText}<p/>
-    <p>You selected: <div class="emphasis">${answerVerify}</div></p>
-    <p>The correct answer is: <div class="emphasis">${answerCorrect}</div></p>
+    You selected: <strong>${answerVerify}</strong><p/>
+    The correct answer is: <strong>${answerCorrect}</strong><p/>
+    ${currentScore()}<p/>
     <button type="submit"id="nextQuestion">Next Question</button>
   `;
 }
