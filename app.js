@@ -1,8 +1,38 @@
+// Required changes to pass the assessment
+
+// Both the question and answers should be held in a form tag: COMPLETED
+
+// Display the score through out the quiz: COMPLETED
+
+// Display which question the user is on, and better yet, display which question they are on out how many they have left (Question 1 of 10): COMPLETED
+
+
+
+
+// Optional changes/ideas/improvements
+
+// For accessibility a alt is needed on the images: COMPLETED
+
+// HTML syntax needs some cleaning up, header is nested in header: COMPLETED
+
+// Organize you JS syntax, grouping together the html template function, then the handler function, then the event listeners, and finally the initiating functions: COMPLETED
+
+
+
+
+
+
+
+
+
+
+
 const store = {
   questions: [
     { // Question 1
       question: 'Which National Park is this?',
       image: "zion.jpg",
+      altImage: "zion2.jpg",
       answers: [
         'Kings Canyon',
         'Zion',
@@ -15,6 +45,7 @@ const store = {
     { // Question 2
       question: 'Which National Park is this?',
       image: "bigbend.jpg",
+      altImage: "bigbend2.jpg",
       answers: [
         'Joshua Tree',
         'Petrfied Forest',
@@ -27,6 +58,7 @@ const store = {
     { // Question 3
       question: 'Which National Park is this?',
       image: "grandcanyon.jpg",
+      altImage: "grandcanyon2.jpg",
       answers: [
         'Grand Canyon',
         'Kings Canyon',
@@ -39,6 +71,7 @@ const store = {
     { // Question 4
       question: 'Which National Park is this?',
       image: "mesaverde.jpg",
+      altImage: "mesaverde.jpg",
       answers: [
         'Dry Tortugas',
         'Congaree',
@@ -51,6 +84,7 @@ const store = {
     { // Question 5
       question: 'Which National Park is this?',
       image: "yosemite.jpg",
+      altImage: "yosemite2.jpg",
       answers: [
         'Grand Teton',
         'Yellowstone',
@@ -66,6 +100,114 @@ const store = {
   questionNumber: 0,
   score: 0,
 };
+
+
+
+
+
+// renderHeader associated functions
+
+function renderHeader() {
+  $("header").html(generateHeader());
+}
+
+
+
+function generateHeader() {
+  return `
+    <h1>National Parks Quiz</h1>
+  `;
+}
+
+
+
+// handleStartQuiz associated functions
+
+function startQuiz() {
+  store.quizStarted = true;
+}
+
+function welcomePage() {
+  return `
+    <button type="submit"id="getStarted">Get started</button>
+  `;
+}
+
+
+
+// handleSubmitAnswer associated functions
+
+function submitAnswerButton() {
+  return `
+    <button type="submit"id="submitAnswer">Submit Answer</button>
+  `;
+}
+
+
+
+// renderAnswer function and associated functions
+
+function renderAnswer() {
+  let radios = $('input:not(:checked)');
+  for (let i = 0; i < radios.length; i++) {
+    if (radios.length === 5) {
+      alert('Please select an answer.');
+      return;
+    }
+  }
+  let answerVerify = verifyAnswer();
+  let i = store.questionNumber;
+  let answerCorrect = store.questions[i].correctAnswer;
+  let answerText = "Sorry, that's incorrect";
+  store.questionNumber += 1;
+  if (answerVerify === answerCorrect) {
+    store.score += 1;
+    answerText = "That's correct!";
+  }
+  let response = nextQuestionButton(answerText, answerVerify, answerCorrect);
+  return $("main").html(response);
+}
+
+function verifyAnswer() {
+  let radios = $('input:radio[name=mltlpChoice]');
+  let answersArrayList = answersArray();
+  for (let i = 0; i < radios.length; i++) {
+    if (radios[i].checked) {
+      return answersArrayList[i];
+    }
+  }
+}
+
+function answersArray() {
+  let i = store.questionNumber;
+  let list = store.questions[i].answers;
+  return list;
+}
+
+function nextQuestionButton(answerText, answerVerify, answerCorrect) {
+  let totalQuestions = store.questions.length;
+  let questionNumber = store.questionNumber;
+  if (questionNumber === totalQuestions) {
+    return `
+      ${answerText}<p/>
+      You selected: <strong>${answerVerify}</strong><p/>
+      The correct answer is: <strong>${answerCorrect}</strong><p/>
+      ${currentScore()}<p/>
+      <button type="submit"id="finalResults">Final Results</button>
+    `;
+  }
+  return `
+    ${answerText}<p/>
+    You selected: <strong>${answerVerify}</strong><p/>
+    The correct answer is: <strong>${answerCorrect}</strong><p/>
+    ${currentScore()}<p/>
+    <button type="submit"id="nextQuestion">Next Question</button>
+  `;
+}
+
+
+
+// Score and question tracker
 
 function currentScore() {
   let questionNumber = store.questionNumber;
@@ -84,20 +226,36 @@ function currentQuestion() {
   `
 }
 
-function generateHeader() {
+
+
+// handleFinalAnswer associated functions
+
+function renderFinalResultsPage() {
+  let finalScore = store.score;
+  let total = store.questionNumber;
+  let response = newQuizButton(finalScore, total);
+  return $("main").html(response);
+}
+
+
+function newQuizButton(finalScore, total) {
   return `
-    <h1>National Parks Quiz</h1>
+    <p>You answered ${finalScore} out of ${total} questions correct</p>
+    <button type="submit"id="newQuiz">Start a new quiz</button>
   `;
 }
 
-function renderHeader() {
-  $("header").html(generateHeader());
-}
 
-function welcomePage() {
-  return `
-    <button type="submit"id="getStarted">Get started</button>
-  `;
+
+// renderQuiz and associated functions
+
+function renderQuiz() {
+  if(store.quizStarted === false) {
+    renderWelcome();
+  }
+  if(store.quizStarted === true) {
+    renderQuestion();
+  }
 }
 
 function renderWelcome() {
@@ -105,32 +263,9 @@ function renderWelcome() {
   $("main").html(welcome);
 }
 
-function answersArray() {
-  let i = store.questionNumber;
-  let list = store.questions[i].answers;
-  return list;
-}
-
-function submitAnswerButton() {
-  return `
-    <button type="submit"id="submitAnswer">Submit Answer</button>
-  `;
-}
-
-function renderImage() {
-  let i = store.questionNumber;
-  let picture = store.questions[i].image;
-  return `
-    <img src="images/${picture}" class="image"/>
-  `;
-}
-
-function addQuestions() {
-  let i = store.questionNumber;
-  let questions = store.questions[i].question;
-  return `
-    <li>${questions}</li>
-  `;
+function renderQuestion() {
+  const list = generateQuestion();
+  $("main").html(list);
 }
 
 function generateQuestion() {
@@ -160,11 +295,6 @@ function generateQuestion() {
   `;
 }
 
-function renderQuestion() {
-  const list = generateQuestion();
-  $("main").html(list);
-}
-
 function generateLiTags() {
   let answersArrayList = answersArray()
   let liList = [];
@@ -175,84 +305,26 @@ function generateLiTags() {
   return liList;
 }
 
-function renderQuiz() {
-  if(store.quizStarted === false) {
-    renderWelcome();
-  }
-  if(store.quizStarted === true) {
-    renderQuestion();
-  }
-}
-
-function startQuiz() {
-  store.quizStarted = true;
-}
-
-function verifyAnswer() {
-  let radios = $('input:radio[name=mltlpChoice]');
-  let answersArrayList = answersArray();
-  for (let i = 0; i < radios.length; i++) {
-    if (radios[i].checked) {
-      return answersArrayList[i];
-    }
-  }
-}
-
-function nextQuestionButton(answerText, answerVerify, answerCorrect) {
-  let totalQuestions = store.questions.length;
-  let questionNumber = store.questionNumber;
-  if (questionNumber === totalQuestions) {
-    return `
-      ${answerText}<p/>
-      You selected: <strong>${answerVerify}</strong><p/>
-      The correct answer is: <strong>${answerCorrect}</strong><p/>
-      ${currentScore()}<p/>
-      <button type="submit"id="finalResults">Final Results</button>
-    `;
-  }
-  return `
-    ${answerText}<p/>
-    You selected: <strong>${answerVerify}</strong><p/>
-    The correct answer is: <strong>${answerCorrect}</strong><p/>
-    ${currentScore()}<p/>
-    <button type="submit"id="nextQuestion">Next Question</button>
-  `;
-}
-
-function renderAnswer() {
-  let radios = $('input:not(:checked)');
-  for (let i = 0; i < radios.length; i++) {
-    if (radios.length === 5) {
-      alert('Please select an answer.');
-      return;
-    }
-  }
-  let answerVerify = verifyAnswer();
+function renderImage() {
   let i = store.questionNumber;
-  let answerCorrect = store.questions[i].correctAnswer;
-  let answerText = "Sorry, that's incorrect";
-  store.questionNumber += 1;
-  if (answerVerify === answerCorrect) {
-    store.score += 1;
-    answerText = "That's correct!";
-  }
-  let response = nextQuestionButton(answerText, answerVerify, answerCorrect);
-  return $("main").html(response);
-}
-
-function newQuizButton(finalScore, total) {
+  let picture = store.questions[i].image;
+  let altPicture = store.questions[i].altImage;
   return `
-    <p>You answered ${finalScore} out of ${total} questions correct</p>
-    <button type="submit"id="newQuiz">Start a new quiz</button>
+    <img src="images/${picture}" alt="${altPicture}" class="image"/>
   `;
 }
 
-function renderFinalResultsPage() {
-  let finalScore = store.score;
-  let total = store.questionNumber;
-  let response = newQuizButton(finalScore, total);
-  return $("main").html(response);
+function addQuestions() {
+  let i = store.questionNumber;
+  let questions = store.questions[i].question;
+  return `
+    <li>${questions}</li>
+  `;
 }
+
+
+
+// Handle functions
 
 function handleStartQuiz() {
   $("main").on("click", "#getStarted", (event) => {
@@ -294,6 +366,10 @@ function handleNewQuiz() {
   });
 }
 
+
+
+// Functions initiated
+
 function handleQuiz() {
   renderHeader();
   renderQuiz();
@@ -303,5 +379,9 @@ function handleQuiz() {
   handleFinalResults();
   handleNewQuiz();
 }
+
+
+
+//Initiating function
 
 $(handleQuiz);
