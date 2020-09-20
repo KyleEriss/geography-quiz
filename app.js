@@ -1,32 +1,3 @@
-// Required changes to pass the assessment
-
-// Both the question and answers should be held in a form tag: COMPLETED
-
-// Display the score through out the quiz: COMPLETED
-
-// Display which question the user is on, and better yet, display which question they are on out how many they have left (Question 1 of 10): COMPLETED
-
-
-
-
-// Optional changes/ideas/improvements
-
-// For accessibility a alt is needed on the images: COMPLETED
-
-// HTML syntax needs some cleaning up, header is nested in header: COMPLETED
-
-// Organize you JS syntax, grouping together the html template function, then the handler function, then the event listeners, and finally the initiating functions: COMPLETED
-
-
-
-
-
-
-
-
-
-
-
 const store = {
   questions: [
     { // Question 1
